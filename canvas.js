@@ -59,8 +59,9 @@ var Controller = function (canvasId, stars, ship) {
                 star.image = sImage;
                 _this.stars.push(star);
         });
-    
         _this.ship = ship;
+
+        _this.canvas.addEventListener("click", _this.clickHandler);
         _this.render();
         _this.update();
     };
@@ -83,7 +84,8 @@ var Controller = function (canvasId, stars, ship) {
 
         this.stars.map(function (star) {
             _this.context.beginPath();
-            _this.context.drawImage(star.image, star.x, star.y, 2* star.r, 2*star.r);
+            _this.context.drawImage(star.image, star.x - star.r, star.y - star.r, 2* star.r, 2*star.r);
+            _this.context.fillRect(star.x,star.y, 5,5)
             _this.context.stroke();
         });
 
@@ -111,7 +113,33 @@ var Controller = function (canvasId, stars, ship) {
             _this.render();
         }, this.timeStep)
     };
+
+
+    this.clickHandler = function (event) {
+        var cx = event.clientX - _this.canvas.getBoundingClientRect().left;
+        var cy = event.clientY- _this.canvas.getBoundingClientRect().top;
+        var star = _this.findClickedStar(cx, cy);
+        console.log(cx,cy);
+
+    };
     //run
+
+    this.getDist = function (x1,y1,x2,y2) {
+        return Math.sqrt( Math.pow(x1 - x2, 2) - Math.pow(y1 - y2 , 2) );
+    };
+
+    this.findClickedStar = function (x,y) {
+        var res = -1;
+        _this.stars.map(function (star) {
+            var dist = _this.getDist(x,y,star.x, star.y);
+            console.log("distance",dist, star.r);
+            if( dist <= star.r ){
+                res = star;
+            }
+        });
+
+        return res;
+    };
     this.init();
 };
 
