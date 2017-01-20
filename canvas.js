@@ -76,8 +76,8 @@ var Controller = function (canvasId, stars, ship) {
         _this.update();
     };
 
-    this.requestState = function () {
-
+    this.requestState = function (ship, stars) {
+        return god(ship, stars);
     };
 
     this.render = function () {
@@ -113,12 +113,12 @@ var Controller = function (canvasId, stars, ship) {
     };
     this.update = function () {
         this.interval = setInterval(function () {
-            //var coords = _this.requestState(_this.ship, _this.stars);
-            var coords = {};
-            coords.ship = {
-                x: _this.ship.x + Math.random()*10,
-                y: _this.ship.y + Math.random()*30 - Math.random()*20
-            };
+            var coords = _this.requestState(_this.ship, _this.stars);
+            //var coords = {};
+            // coords.ship = {
+            //     x: _this.ship.x + Math.random()*10,
+            //     y: _this.ship.y + Math.random()*30 - Math.random()*20
+            // };
 
             _this.updateState(coords);
             _this.render();
