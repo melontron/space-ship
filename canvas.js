@@ -5,7 +5,7 @@
 
 var stars = [
     {
-        mass: 100,
+        M: 100,
         x:50,
         y:50,
         L: 100,
@@ -13,7 +13,7 @@ var stars = [
         image: "./images/sun.png"
     },
     {
-        mass: 100,
+        M: 100,
         x: 200,
         y:40,
         L: 100,
@@ -21,7 +21,7 @@ var stars = [
         image: "./images/sun.png"
     },
     {
-        mass: 100,
+        M: 100,
         x: 150,
         y:160,
         L: 100,
@@ -31,9 +31,10 @@ var stars = [
 ];
 
 var ship = {
-    mass: 30,
     x:10,
     y: 50,
+    vx: 1,
+    vy: 0,
     image: ""
 }
 
