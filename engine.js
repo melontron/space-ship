@@ -10,22 +10,16 @@ var t = 0.001;
 // var spaceship = {
 // 	x: 0, y: 1, vx: 10, vy: 0
 // };
-//
-// var stars = {
+
+// var stars = [{
 // 	x: 0, y: 0, M: 10000, L: 0
-// };
+// }];
 
 function god(spaceship, stars){
 	var fx = 0;
 	var fy = 0;
-	// stars.map(star => {
-	// 	[dfx, dfy] = getForceProjections(spaceship.x, spaceship.y, stars.x, stars.y, stars.M, stars.L);
-	// 	fx += dfx;
-	// 	fy += dfy;
-	// });
-
 	stars.map(function (star) {
-		var res = getForceProjections(spaceship.x, spaceship.y, stars.x, stars.y, stars.M, stars.L);
+		var res = getForceProjections(spaceship.x, spaceship.y, star.x, star.y, star.M, star.L);
 		fx += res[0];
 		fy += res[1];
 	})
@@ -57,12 +51,12 @@ function getForceProjections(x, y, sx, sy, M, L){
 }
 
 // for (var i = 0; i < 1000; ++i){
-	// [x, y, Vx, Vy] = god(spaceship, stars);
-	// spaceship.x = x;
-	// spaceship.y = y;
-	// spaceship.vx = Vx;
-	// spaceship.vy = Vy;
-	// console.log (`${x} ${y}`);
+// 	res = god(spaceship, stars);
+// 	spaceship.x = res.ship.x;
+// 	spaceship.y = res.ship.y;
+// 	spaceship.vx = res.ship.vx;
+// 	spaceship.vy = res.ship.vy;
+	// console.log (spaceship);
 	// writer.write(spaceship);
 // }
 
