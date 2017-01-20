@@ -27,13 +27,21 @@ var stars = [
         L: 100,
         r: 30,
         image: "./images/sun.png"
+    },
+    {
+        mass: 100,
+        x: 400,
+        y:270,
+        L: 100,
+        r: 30,
+        image: "./images/sun.png"
     }
 ];
 
 var ship = {
     x:10,
     y: 50,
-    vx: 1,
+    vx: 10,
     vy: 0,
     image: ""
 }
@@ -86,7 +94,6 @@ var Controller = function (canvasId, stars, ship) {
         this.stars.map(function (star) {
             _this.context.beginPath();
             _this.context.drawImage(star.image, star.x - star.r, star.y - star.r, 2* star.r, 2*star.r);
-            _this.context.fillRect(star.x,star.y, 5,5)
             _this.context.stroke();
         });
 
@@ -100,6 +107,8 @@ var Controller = function (canvasId, stars, ship) {
     this.updateState = function (coords) {
         _this.ship.x = coords.ship.x;
         _this.ship.y = coords.ship.y;
+        _this.ship.vx = coords.ship.vx;
+        _this.ship.vy = coords.ship.vy;
     };
     this.update = function () {
         this.interval = setInterval(function () {
@@ -120,20 +129,19 @@ var Controller = function (canvasId, stars, ship) {
         var cx = event.clientX - _this.canvas.getBoundingClientRect().left;
         var cy = event.clientY- _this.canvas.getBoundingClientRect().top;
         var star = _this.findClickedStar(cx, cy);
-        console.log(cx,cy);
+        console.log(star);
 
     };
     //run
 
     this.getDist = function (x1,y1,x2,y2) {
-        return Math.sqrt( Math.pow(x1 - x2, 2) - Math.pow(y1 - y2 , 2) );
+        return Math.sqrt( Math.pow(x1 - x2, 2) + Math.pow(y1 - y2 , 2) );
     };
 
     this.findClickedStar = function (x,y) {
         var res = -1;
         _this.stars.map(function (star) {
             var dist = _this.getDist(x,y,star.x, star.y);
-            console.log("distance",dist, star.r);
             if( dist <= star.r ){
                 res = star;
             }
