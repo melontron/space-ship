@@ -96,8 +96,8 @@ var Controller = function (canvasId, stars, ship) {
     };
 
     this.mousedown = function (event) {
-        var cx = event.clientX - _this.canvas.getBoundingClientRect().left;
-        var cy = event.clientY - _this.canvas.getBoundingClientRect().top;
+        var cx = (event.clientX - _this.canvas.getBoundingClientRect().left) * _this.canvasWidth / _this.canvas.width;
+        var cy = (event.clientY - _this.canvas.getBoundingClientRect().top) * _this.canvasHeight / _this.canvas.height;
         var star = getClickedStar({x: cx, y: cy}, _this.stars);
         console.log(star);
         _this.clicked = true;
