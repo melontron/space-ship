@@ -1,5 +1,5 @@
 var dL = 2;
-var dM = 2;
+var dM = 100;
 var availableM = 1000;
 var availableL = 1000;
 

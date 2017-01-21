@@ -8,10 +8,10 @@ var level1 = {
             r: 35*2,
             image: "./images/hqdefault.jpg"
         },
-         {
+        {
              M: 50,
-             x: 540,
-             y:100,
+             x: 490,
+             y:120,
              L: 0,
              r: 19*2,
              image: "./images/sun.png"
@@ -22,6 +22,22 @@ var level1 = {
              y:300,
              L: 0,
              r: 50*2,
+             image: "./images/sun.png"
+         },
+         {
+             M: 50,
+             x: 1300,
+             y:800,
+             L: 0,
+             r: 32*2,
+             image: "./images/sun.png"
+         },
+         {
+             M: 50,
+             x: 1500,
+             y: 500,
+             L: 0,
+             r: 16*2,
              image: "./images/sun.png"
          }
     ],

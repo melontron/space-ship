@@ -81,7 +81,7 @@ var Controller = function (canvasId, stars, ship) {
     this.update = function () {
         this.interval = setInterval(function () {
             doAction(_this.changing, _this.evt, _this.clicked);
-            var coords = god(_this.ship, _this.stars);
+            var coords = superGod(_this.ship, _this.stars);
             _this.updateState(coords);
             _this.render();
 

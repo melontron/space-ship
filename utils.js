@@ -27,16 +27,16 @@ function doAction(star, event, active){
 	if (active){
 		switch(event){
 			case 0:
-				if (availableL > 0){
+				// if (availableL > 0){
 					star.L += dL;
 					availableL -= dL;
-				}
+				// }
 				break;
 			case 2:
-				if (availableM > 0){
+				// if (availableM > 0){
 					star.M += dM;
 					availableM -= dM;
-				}
+				// }
 				break;
 			default:
 		}
