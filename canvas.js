@@ -81,7 +81,7 @@ var Controller = function (canvasId, stars, ship) {
     this.update = function () {
         this.interval = setInterval(function () {
             doAction(_this.changing, _this.evt, _this.clicked);
-            var coords = god(_this.ship, _this.stars, 3);
+            var coords = god(_this.ship, _this.stars);
             _this.updateState(coords);
             _this.render();
 
@@ -93,16 +93,10 @@ var Controller = function (canvasId, stars, ship) {
             }
 
             if( detectCollision(_this.ship, _this.stars, boundingRect)) {
-                //debugger;
                 clearInterval(_this.interval);
-                //debugger;
                 var lvl = getLevel(_this.level);
-                //debugger;
                 controllers.pop();
                 controllers.push( new Controller( canvasId, lvl.stars, lvl.ship ) )
-                //_this.init(lvl.ship, lvl.stars);
-                //debugger;
-
             }
 
         }, this.timeStep)
