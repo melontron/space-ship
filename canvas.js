@@ -5,36 +5,36 @@
 
 var stars = [
     {
-        M: 45,
-        x:60,
-        y:270,
+        M: 6.25*4,
+        x:100,
+        y:700,
         L: 0,
-        r: 17,
+        r: 35*2,
         image: "./images/sun.png"
     },
      {
-         M: 200,
-         x: 250,
-         y:50,
+         M: 8*4,
+         x: 540,
+         y:100,
          L: 0,
-         r: 19,
+         r: 19*2,
          image: "./images/sun.png"
      },
      {
-         M: 200,
-         x: 400,
+         M: 6.25*4,
+         x: 1040,
          y:200,
          L: 0,
-         r: 25,
+         r: 50*2,
          image: "./images/sun.png"
      }
 
 ];
 
 var ship = {
-    x: 60,
-    y: 230,
-    vx:  150,
+    x: 100,
+    y: 650,
+    vx:  100,
     vy: 0,
     image: ""
 }
@@ -60,7 +60,11 @@ var Controller = function (canvasId, stars, ship) {
 
         _this.ship = ship;
         _this.bindEvets();
-        _this.canvas.addEventListener("click", _this.clickHandler);
+        _this.canvas.addEventListener("mousedown", _this.clickHandler);
+        _this.canvas.addEventListener("contextmenu", function (e) {
+            e.preventDefault();
+        });
+
         _this.render();
         _this.update();
     };
@@ -82,7 +86,7 @@ var Controller = function (canvasId, stars, ship) {
 
         this.context.beginPath();
         this.context.fillStyle = "00FF00";
-        this.context.fillRect(shipX, shipY, 20, 20);
+        this.context.fillRect(shipX - 10, shipY - 10, 20, 20);
 
         this.stars.map(function (star) {
             var starX = ( _this.canvas.width * (star.x - star.r) ) / _this.canvasWidth;
@@ -120,11 +124,11 @@ var Controller = function (canvasId, stars, ship) {
 
 
     this.clickHandler = function (event) {
-        var cx = event.clientX - _this.canvas.getBoundingClientRect().left;
-        var cy = event.clientY- _this.canvas.getBoundingClientRect().top;
-        var star = _this.findClickedStar(cx, cy);
 
-        _this.stars[0].L += 10;
+        var cx = (event.clientX - _this.canvas.getBoundingClientRect().left) * _this.canvasWidth / _this.canvas.width;
+        var cy = (event.clientY- _this.canvas.getBoundingClientRect().top) * _this.canvasHeight / _this.canvas.height;
+        var star = _this.findClickedStar(cx, cy);
+        star.L += 12;
     };
     //run
 
@@ -157,7 +161,7 @@ var Controller = function (canvasId, stars, ship) {
 
     this.canvas = document.getElementById(canvasId);
     this.context = this.canvas.getContext('2d');
-    this.timeStep = 50;
+    this.timeStep = 10;
     this.canvasWidth = 1200;
     this.canvasHeight = 900;
     this.canvasSizeP = 0.5;
