@@ -6,7 +6,7 @@ var level1 = {
             y:700,
             L: 0,
             r: 35*2,
-            image: "./images/sun.png"
+            image: "./images/hqdefault.jpg"
         },
          {
              M: 50,
@@ -24,14 +24,7 @@ var level1 = {
              r: 50*2,
              image: "./images/sun.png"
          },
-        {
-            M: 50,
-            x: 1040,
-            y:600,
-            L: 0,
-            r: 50*2,
-            image: "./images/sun.png"
-        },
+        
     ],
     ship: {
         x: 200,

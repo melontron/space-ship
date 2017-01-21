@@ -43,22 +43,15 @@ var Controller = function (canvasId, stars, ship) {
         _this.clear();
 
         this.context.beginPath();
-        this.context.fillStyle = "FF0000";
-        this.context.rect(0,0,this.canvas.width, this.canvas.height);
+        this.context.fillStyle = "#FF0000";
+
+        var bg = new Image();
+            bg.src = "./images/spaceship_background.png";
+        this.context.drawImage(bg,0,0,this.canvas.width, this.canvas.height);
         this.context.stroke();
 
         // var shipX = ( _this.canvas.width * ship.x ) / _this.canvasWidth;
         // var shipY = ( _this.canvas.height * ship.y ) / _this.canvasHeight;
-
-        var shipX = ( _this.canvas.width * (ship.x) ) / _this.canvasWidth;
-        var shipY = ( _this.canvas.height * (ship.y) ) / _this.canvasHeight;
-        var shipR = ( _this.canvas.width * ship.r ) / _this.canvasWidth;
-
-
-        this.context.beginPath();
-        this.context.fillStyle = "00FF00";
-        this.context.arc(shipX, shipY, shipR, 0, 2 * Math.PI);
-        this.context.stroke();
 
         this.stars.map(function (star) {
             var starX = ( _this.canvas.width * (star.x - star.r) ) / _this.canvasWidth;
@@ -70,6 +63,16 @@ var Controller = function (canvasId, stars, ship) {
             _this.context.stroke();
         });
 
+        var shipX = ( _this.canvas.width * (ship.x) ) / _this.canvasWidth;
+        var shipY = ( _this.canvas.height * (ship.y) ) / _this.canvasHeight;
+        var shipR = ( _this.canvas.width * ship.r ) / _this.canvasWidth;
+
+
+        this.context.beginPath();
+        this.canvas.fillStyle = "#FF0000";
+        this.context.arc(shipX, shipY, shipR, 0, 2 * Math.PI);
+        this.context.closePath();
+        this.context.fill();
 
     };
 
@@ -112,6 +115,10 @@ var Controller = function (canvasId, stars, ship) {
         _this.changing = star;
     };
 
+    this.mouseup = function (event){
+        _this.clicked = false;
+    };
+
     this.bindEvents = function () {
         window.addEventListener("resize",function (event) {
             _this.screen = {
@@ -130,10 +137,10 @@ var Controller = function (canvasId, stars, ship) {
     this.clicked = false;
     this.evt = 0;
     this.changing = null;
-    this.canvasWidth = 1200;
+    this.canvasWidth = 1800;
     this.canvasHeight = 900;
-    this.canvasSizeP = 0.5;
-    this.ratio = 0.75;
+    this.canvasSizeP = 0.8;
+    this.ratio = 0.5;
     this.init();
 };
 
@@ -153,6 +160,8 @@ var detectCollision = function (ship, stars, boundingRect) {
         (ship.y - ship.r) < boundingRect.y1){
         collided = true;
     }
-    return collided;
-}
+    return collided
+};
+
+
 
