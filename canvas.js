@@ -51,6 +51,9 @@ var Controller = function (canvasId, stars, ship) {
     this.context = this.canvas.getContext('2d');
 
     this.timeStep = 10;
+    this.clicked = false;
+    this.evt = 0;
+    this.changing = null;
 
 
     this.init = function () {
@@ -63,7 +66,10 @@ var Controller = function (canvasId, stars, ship) {
         });
         _this.ship = ship;
 
-        _this.canvas.addEventListener("click", _this.clickHandler);
+        // _this.canvas.addEventListener("click", _this.clickHandler);
+        _this.canvas.addEventListener("mousedown", _this.mousedown);
+        _this.canvas.addEventListener("mouseup", _this.mouseup);
+        _this.canvas.addEventListener("contextmenu", function(e){e.preventDefault()});
         _this.render();
         _this.update();
     };
@@ -89,8 +95,6 @@ var Controller = function (canvasId, stars, ship) {
             _this.context.drawImage(star.image, star.x - star.r, star.y - star.r, 2* star.r, 2*star.r);
             _this.context.stroke();
         });
-
-
     };
 
     this.clear = function () {
@@ -103,8 +107,10 @@ var Controller = function (canvasId, stars, ship) {
         _this.ship.vx = coords.ship.vx;
         _this.ship.vy = coords.ship.vy;
     };
+
     this.update = function () {
         this.interval = setInterval(function () {
+            doAction(_this.changing, _this.evt, _this.clicked);
             var coords = _this.requestState(_this.ship, _this.stars);
             // var coords = {};
             // coords.ship = {
@@ -117,31 +123,19 @@ var Controller = function (canvasId, stars, ship) {
         }, this.timeStep)
     };
 
-
-    this.clickHandler = function (event) {
+    this.mousedown = function (event) {
         var cx = event.clientX - _this.canvas.getBoundingClientRect().left;
-        var cy = event.clientY- _this.canvas.getBoundingClientRect().top;
-        var star = _this.findClickedStar(cx, cy);
-
-        _this.stars[0].L += 10;
-    };
-    //run
-
-    this.getDist = function (x1,y1,x2,y2) {
-        return Math.sqrt( Math.pow(x1 - x2, 2) + Math.pow(y1 - y2 , 2) );
+        var cy = event.clientY - _this.canvas.getBoundingClientRect().top;
+        var star = findNearestStar({x: cx, y: cy}, _this.stars);
+        _this.clicked = true;
+        _this.evt = event.button;
+        _this.changing = star;
     };
 
-    this.findClickedStar = function (x,y) {
-        var res = -1;
-        _this.stars.map(function (star) {
-            var dist = _this.getDist(x,y,star.x, star.y);
-            if( dist <= star.r ){
-                res = star;
-            }
-        });
-
-        return res;
+    this.mouseup = function (event){
+        _this.clicked = false;
     };
+
     this.init();
 };
 
