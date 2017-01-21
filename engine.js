@@ -1,28 +1,35 @@
-let alpha =  -0.01;
-let beta = 0.5;
-let t = 0.001;
+var alpha =  -0.01;
+var beta = 0.5;
+var t = 0.001;
 
 // var fs = require('fs')
 // var csvWriter = require('csv-write-stream')
 // var writer = csvWriter()
 // writer.pipe(fs.createWriteStream('out.csv'))
 
-// let spaceship = {
+// var spaceship = {
 // 	x: 0, y: 1, vx: 10, vy: 0
 // };
-
-// let stars = {
+//
+// var stars = {
 // 	x: 0, y: 0, M: 10000, L: 0
 // };
 
 function god(spaceship, stars){
-	[fx, fy] = [0, 0];
-	stars.map(star => {
-		[dfx, dfy] = getForceProjections(spaceship.x, spaceship.y, stars.x, stars.y, stars.M, stars.L);
-		fx += dfx;
-		fy += dfy;
-	});
-	
+	var fx = 0;
+	var fy = 0;
+	// stars.map(star => {
+	// 	[dfx, dfy] = getForceProjections(spaceship.x, spaceship.y, stars.x, stars.y, stars.M, stars.L);
+	// 	fx += dfx;
+	// 	fy += dfy;
+	// });
+
+	stars.map(function (star) {
+		var res = getForceProjections(spaceship.x, spaceship.y, stars.x, stars.y, stars.M, stars.L);
+		fx += res[0];
+		fy += res[1];
+	})
+
 	return {
 		ship: getShipNextState(spaceship.x, spaceship.y, spaceship.vx, spaceship.vy, fx, fy),
 		stars: getStarNextState(stars)
@@ -43,9 +50,9 @@ function getShipNextState(x, y, Vx, Vy, fx, fy){
 }
 
 function getForceProjections(x, y, sx, sy, M, L){
-	let r2 = (x - sx) * (x - sx) + (y - sy) * (y - sy);
-	let f = (alpha * M + beta * L) / r2;
-	let r = Math.sqrt(r2);
+	var r2 = (x - sx) * (x - sx) + (y - sy) * (y - sy);
+	var f = (alpha * M + beta * L) / r2;
+	var r = Math.sqrt(r2);
 	return [f / r * (x - sx), f / r * (y - sy)];
 }
 

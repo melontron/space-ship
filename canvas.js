@@ -5,42 +5,42 @@
 
 var stars = [
     {
-        M: 100,
+        M: 10000,
         x:50,
         y:50,
-        L: 100,
+        L: 0,
         r: 17,
         image: "./images/sun.png"
     },
-    {
-        M: 100,
-        x: 200,
-        y:40,
-        L: 100,
-        r: 19,
-        image: "./images/sun.png"
-    },
-    {
-        M: 100,
-        x: 150,
-        y:160,
-        L: 100,
-        r: 30,
-        image: "./images/sun.png"
-    },
-    {
-        mass: 100,
-        x: 400,
-        y:270,
-        L: 100,
-        r: 30,
-        image: "./images/sun.png"
-    }
+    // {
+    //     M: 100,
+    //     x: 200,
+    //     y:40,
+    //     L: 100,
+    //     r: 19,
+    //     image: "./images/sun.png"
+    // },
+    // {
+    //     M: 100,
+    //     x: 150,
+    //     y:160,
+    //     L: 100,
+    //     r: 30,
+    //     image: "./images/sun.png"
+    // },
+    // {
+    //     mass: 100,
+    //     x: 400,
+    //     y:270,
+    //     L: 100,
+    //     r: 30,
+    //     image: "./images/sun.png"
+    // }
 ];
 
 var ship = {
-    x:10,
-    y: 50,
+    x:50,
+    y: 70,
     vx: 10,
     vy: 0,
     image: ""
@@ -105,15 +105,17 @@ var Controller = function (canvasId, stars, ship) {
     };
 
     this.updateState = function (coords) {
-        _this.ship.x = coords.ship.x;
+        console.log(coords.ship);
+        _this.ship.x = coords.ship.x
         _this.ship.y = coords.ship.y;
         _this.ship.vx = coords.ship.vx;
         _this.ship.vy = coords.ship.vy;
     };
     this.update = function () {
-        this.interval = setInterval(function () {
+        this.interval = setTimeout(function () {
+            console.log("=====", _this.ship, _this.stars);
             var coords = _this.requestState(_this.ship, _this.stars);
-            //var coords = {};
+            // var coords = {};
             // coords.ship = {
             //     x: _this.ship.x + Math.random()*10,
             //     y: _this.ship.y + Math.random()*30 - Math.random()*20
