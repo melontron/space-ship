@@ -30,10 +30,6 @@ var Controller = function (canvasId, stars, ship) {
         _this.update();
     };
 
-    this.requestState = function (ship, stars) {
-        return god(ship, stars);
-    };
-
     this.render = function () {
         _this.clear();
 
@@ -82,7 +78,7 @@ var Controller = function (canvasId, stars, ship) {
     this.update = function () {
         this.interval = setInterval(function () {
             doAction(_this.changing, _this.evt, _this.clicked);
-            var coords = _this.requestState(_this.ship, _this.stars);
+            var coords = god(_this.ship, _this.stars);
             _this.updateState(coords);
             _this.render();
 
@@ -102,7 +98,8 @@ var Controller = function (canvasId, stars, ship) {
     this.mousedown = function (event) {
         var cx = event.clientX - _this.canvas.getBoundingClientRect().left;
         var cy = event.clientY - _this.canvas.getBoundingClientRect().top;
-        var star = findNearestStar({x: cx, y: cy}, _this.stars);
+        var star = getClickedStar({x: cx, y: cy}, _this.stars);
+        console.log(star);
         _this.clicked = true;
         _this.evt = event.button;
         _this.changing = star;
@@ -135,23 +132,3 @@ var Controller = function (canvasId, stars, ship) {
     this.ratio = 0.75;
     this.init();
 };
-
-var detectCollision = function (ship, stars, boundingRect) {
-    var collided = false;
-    var delta = 15;
-    stars.map(function (star) {
-        var dest = getDist(ship.x, ship.y, star.x, star.y);
-        if( dest < ship.r + star.r - delta){
-            collided = true;
-        }
-    });
-
-    if( (ship.x + ship.r) > boundingRect.x2 ||
-        (ship.x - ship.r) < boundingRect.x1 ||
-        (ship.y + ship.r) >  boundingRect.y2 ||
-        (ship.y - ship.r) < boundingRect.y1){
-        collided = true;
-    }
-    return collided;
-}
-
