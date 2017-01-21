@@ -23,8 +23,7 @@ var level1 = {
              L: 0,
              r: 50*2,
              image: "./images/sun.png"
-         },
-        
+         }
     ],
     ship: {
         x: 200,
@@ -33,6 +32,5 @@ var level1 = {
         vy: 0,
         image: "",
         r: 20
-
     }
 }

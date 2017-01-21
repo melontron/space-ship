@@ -22,21 +22,12 @@ var Controller = function (canvasId, stars, ship) {
 
         _this.ship = ship;
         _this.bindEvents();
-        _this.canvas.addEventListener("mousedown", _this.clickHandler);
-        _this.canvas.addEventListener("contextmenu", function (e) {
-            e.preventDefault();
-        });
 
-        // _this.canvas.addEventListener("click", _this.clickHandler);
         _this.canvas.addEventListener("mousedown", _this.mousedown);
         _this.canvas.addEventListener("mouseup", _this.mouseup);
         _this.canvas.addEventListener("contextmenu", function(e){e.preventDefault()});
         _this.render();
         _this.update();
-    };
-
-    this.requestState = function (ship, stars) {
-        return god(ship, stars);
     };
 
     this.render = function () {
@@ -86,10 +77,11 @@ var Controller = function (canvasId, stars, ship) {
         _this.ship.vx = coords.ship.vx;
         _this.ship.vy = coords.ship.vy;
     };
+
     this.update = function () {
         this.interval = setInterval(function () {
             doAction(_this.changing, _this.evt, _this.clicked);
-            var coords = _this.requestState(_this.ship, _this.stars);
+            var coords = god(_this.ship, _this.stars);
             _this.updateState(coords);
             _this.render();
 
@@ -107,9 +99,9 @@ var Controller = function (canvasId, stars, ship) {
     };
 
     this.mousedown = function (event) {
-        var cx = event.clientX - _this.canvas.getBoundingClientRect().left;
-        var cy = event.clientY - _this.canvas.getBoundingClientRect().top;
-        var star = findNearestStar({x: cx, y: cy}, _this.stars);
+        var cx = (event.clientX - _this.canvas.getBoundingClientRect().left) * _this.canvasWidth / _this.canvas.width;
+        var cy = (event.clientY - _this.canvas.getBoundingClientRect().top) * _this.canvasHeight / _this.canvas.height;
+        var star = getClickedStar({x: cx, y: cy}, _this.stars);
         _this.clicked = true;
         _this.evt = event.button;
         _this.changing = star;
@@ -129,7 +121,6 @@ var Controller = function (canvasId, stars, ship) {
             _this.canvas.height = _this.canvas.width * _this.ratio;
         })
     }
-    //run
 
     this.canvas = document.getElementById(canvasId);
     this.context = this.canvas.getContext('2d');
@@ -143,25 +134,3 @@ var Controller = function (canvasId, stars, ship) {
     this.ratio = 0.5;
     this.init();
 };
-
-var detectCollision = function (ship, stars, boundingRect) {
-    var collided = false;
-    var delta = 15;
-    stars.map(function (star) {
-        var dest = getDist(ship.x, ship.y, star.x, star.y);
-        if( dest < ship.r + star.r - delta){
-            collided = true;
-        }
-    });
-
-    if( (ship.x + ship.r) > boundingRect.x2 ||
-        (ship.x - ship.r) < boundingRect.x1 ||
-        (ship.y + ship.r) >  boundingRect.y2 ||
-        (ship.y - ship.r) < boundingRect.y1){
-        collided = true;
-    }
-    return collided
-};
-
-
-

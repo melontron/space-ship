@@ -1,7 +1,3 @@
-var alpha =  -20000;
-var beta = 20000;
-var t = 0.01;
-
 function god(spaceship, stars, affect){
     affect = affect || 1;
 	var affecting = findNearestStars(spaceship, stars, affect);
