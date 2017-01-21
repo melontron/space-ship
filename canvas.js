@@ -5,9 +5,9 @@
 
 var stars = [
     {
-        M: 10000,
-        x:50,
-        y:50,
+        M: 1000000000,
+        x:150,
+        y:150,
         L: 0,
         r: 17,
         image: "./images/sun.png"
@@ -41,7 +41,7 @@ var stars = [
 var ship = {
     x:50,
     y: 70,
-    vx: 10,
+    vx: 120,
     vy: 0,
     image: ""
 }
@@ -57,7 +57,7 @@ var Controller = function (canvasId, stars, ship) {
     this.canvas.height = this.screen.h;
     this.context = this.canvas.getContext('2d');
 
-    this.timeStep = 20;
+    this.timeStep = 10;
 
 
     this.init = function () {
@@ -89,7 +89,7 @@ var Controller = function (canvasId, stars, ship) {
 
         this.context.beginPath();
         this.context.fillStyle = "00FF00";
-        this.context.fillRect(_this.ship.x,_this.ship.y,20, 20);
+        this.context.fillRect(_this.ship.x ,_this.ship.y , 20, 20);
 
         this.stars.map(function (star) {
             _this.context.beginPath();
@@ -105,15 +105,13 @@ var Controller = function (canvasId, stars, ship) {
     };
 
     this.updateState = function (coords) {
-        console.log(coords.ship);
-        _this.ship.x = coords.ship.x
-        _this.ship.y = coords.ship.y;
+        _this.ship.x =  coords.ship.x
+        _this.ship.y =  coords.ship.y;
         _this.ship.vx = coords.ship.vx;
         _this.ship.vy = coords.ship.vy;
     };
     this.update = function () {
-        this.interval = setTimeout(function () {
-            console.log("=====", _this.ship, _this.stars);
+        this.interval = setInterval(function () {
             var coords = _this.requestState(_this.ship, _this.stars);
             // var coords = {};
             // coords.ship = {
@@ -131,7 +129,6 @@ var Controller = function (canvasId, stars, ship) {
         var cx = event.clientX - _this.canvas.getBoundingClientRect().left;
         var cy = event.clientY- _this.canvas.getBoundingClientRect().top;
         var star = _this.findClickedStar(cx, cy);
-        console.log(star);
 
     };
     //run
