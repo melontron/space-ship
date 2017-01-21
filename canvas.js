@@ -5,20 +5,37 @@
 
 var stars = [
     {
-        M: 1000000000,
-        x : 100,
-        y: 100,
+        M: 45,
+        x:60,
+        y:270,
         L: 0,
-        r: 10,
+        r: 17,
         image: "./images/sun.png"
-    }
+    },
+     // {
+     //     M: 200,
+     //     x: 250,
+     //     y:50,
+     //     L: 0,
+     //     r: 19,
+     //     image: "./images/sun.png"
+     // },
+     // {
+     //     M: 200,
+     //     x: 400,
+     //     y:200,
+     //     L: 0,
+     //     r: 25,
+     //     image: "./images/sun.png"
+     // }
+
 ];
 
 var ship = {
-    x:100,
-    y: 150,
-    vx: -400,
-    vy: -105,
+    x: 60,
+    y: 230,
+    vx:  150,
+    vy: 0,
     image: ""
 }
 
@@ -65,13 +82,13 @@ var Controller = function (canvasId, stars, ship) {
 
         this.context.beginPath();
         this.context.fillStyle = "00FF00";
-        this.context.fillRect(shipX ,shipY , 10, 10);
+        this.context.fillRect(_this.ship.x -10,_this.ship.y-10 , 20, 20);
 
         this.stars.map(function (star) {
             var starX = ( _this.canvas.width * (star.x - star.r) ) / _this.canvasWidth;
             var starY = ( _this.canvas.height * (star.y - star.r) ) / _this.canvasHeight;
             var starR = ( _this.canvas.width * star.r ) / _this.canvasWidth;
-            console.log(starX,starY,starR);
+            //console.log(starX,starY,starR);
             _this.context.beginPath();
             _this.context.drawImage(star.image, starX, starY, 2 * starR, 2*starR);
             _this.context.stroke();
@@ -107,6 +124,7 @@ var Controller = function (canvasId, stars, ship) {
         var cy = event.clientY- _this.canvas.getBoundingClientRect().top;
         var star = _this.findClickedStar(cx, cy);
 
+        _this.stars[0].L += 10;
     };
     //run
 

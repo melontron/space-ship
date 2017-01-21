@@ -1,33 +1,31 @@
-var alpha =  -0.01;
-var beta = 0.5;
-var t = 0.001;
+var alpha =  -20000;
+var beta = 20000;
+var t = 0.01;
 
-// var fs = require('fs')
-// var csvWriter = require('csv-write-stream')
-// var writer = csvWriter()
-// writer.pipe(fs.createWriteStream('out.csv'))
+function dist(a, b){
+    return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
+}
 
-// var spaceship = {
-// 	x: 0, y: 1, vx: 10, vy: 0
-// };
+function god(spaceship, stars, affect){
+    affect = affect || 1;
+	var affecting = stars
+	.sort(function(s1, s2){
+	    return dist(spaceship, s1) > dist(spaceship, s2);
+	})
+	.slice(0, affect);
 
-// var stars = [{
-// 	x: 0, y: 0, M: 10000, L: 0
-// }];
-
-function god(spaceship, stars){
 	var fx = 0;
 	var fy = 0;
-	stars.map(function (star) {
-		var res = getForceProjections(spaceship.x, spaceship.y, star.x, star.y, star.M, star.L);
+	affecting.map(function (star) {
+		var res = getForceProjections(spaceship.x, spaceship.y, spaceship.vx, spaceship.vy, star.x, star.y, star.M, star.L);
 		fx += res[0];
 		fy += res[1];
-	})
+	});
 
 	return {
 		ship: getShipNextState(spaceship.x, spaceship.y, spaceship.vx, spaceship.vy, fx, fy),
 		stars: getStarNextState(stars)
-	}
+	};
 }
 
 function getStarNextState(stars){
@@ -43,21 +41,11 @@ function getShipNextState(x, y, Vx, Vy, fx, fy){
 	};
 }
 
-function getForceProjections(x, y, sx, sy, M, L){
+function getForceProjections(x, y, vx, vy, sx, sy, M, L){
+    x += vx * t / 2;
+    y += vy * t / 2;
 	var r2 = (x - sx) * (x - sx) + (y - sy) * (y - sy);
 	var f = (alpha * M + beta * L) / r2;
 	var r = Math.sqrt(r2);
 	return [f / r * (x - sx), f / r * (y - sy)];
 }
-
-// for (var i = 0; i < 1000; ++i){
-// 	res = god(spaceship, stars);
-// 	spaceship.x = res.ship.x;
-// 	spaceship.y = res.ship.y;
-// 	spaceship.vx = res.ship.vx;
-// 	spaceship.vy = res.ship.vy;
-	// console.log (spaceship);
-	// writer.write(spaceship);
-// }
-
-// writer.end()
