@@ -6,10 +6,13 @@
 var stars = [
     {
         M: 1000000000,
-        x:150,
-        y:150,
+        xp: 15 * 0.01, /* part of width */
+        yp: 15 * 0.01, /* part of height */
+        x : 0,
+        y: 0,
         L: 0,
-        r: 17,
+        r: 0,
+        rp: 2 * 0.01, /* part of width */
         image: "./images/sun.png"
     },
     // {
@@ -39,27 +42,19 @@ var stars = [
 ];
 
 var ship = {
-    x:50,
-    y: 70,
-    vx: 120,
+    xp: 50 * 0.01,
+    yp: 50 * 0.01,
+    x:0,
+    y: 0,
+    vxp: 25 * 0.01,
+    vyp: 0,
+    vx: 0,
     vy: 0,
     image: ""
 }
 
 var Controller = function (canvasId, stars, ship) {
     var _this = this;
-    this.screen = {
-        w: 480,
-        h: 320
-    };
-    this.canvas = document.getElementById(canvasId);
-    this.canvas.width = this.screen.w;
-    this.canvas.height = this.screen.h;
-    this.context = this.canvas.getContext('2d');
-
-    this.timeStep = 10;
-
-
     this.init = function () {
         _this.stars = [];
         stars.map(function (star) {
@@ -68,8 +63,18 @@ var Controller = function (canvasId, stars, ship) {
                 star.image = sImage;
                 _this.stars.push(star);
         });
-        _this.ship = ship;
 
+        _this.screen = {
+            w: window.innerWidth,
+            h: window.innerHeight
+        };
+
+        _this.canvas.width = _this.screen.w * _this.canvasSizeP;
+        _this.canvas.height = _this.canvas.width * _this.ratio;
+
+        _this.ship = ship;
+        _this.coordinateController();
+        _this.bindEvets();
         _this.canvas.addEventListener("click", _this.clickHandler);
         _this.render();
         _this.update();
@@ -93,7 +98,7 @@ var Controller = function (canvasId, stars, ship) {
 
         this.stars.map(function (star) {
             _this.context.beginPath();
-            _this.context.drawImage(star.image, star.x - star.r, star.y - star.r, 2* star.r, 2*star.r);
+            _this.context.drawImage(star.image, (star.x - star.r), (star.y - star.r), 2 * star.r, 2*star.r);
             _this.context.stroke();
         });
 
@@ -148,6 +153,66 @@ var Controller = function (canvasId, stars, ship) {
 
         return res;
     };
+
+    this.bindEvets = function () {
+        window.addEventListener("resize",function (event) {
+            //var coef = window.innerWidth / _this.screen.w;
+
+            _this.canvas.width = window.innerWidth * _this.canvasSizeP;
+            _this.canvas.height = _this.canvas.width * _this.ratio;
+
+            _this.stars.map(function (star) {
+                star.xp = (star.x * 100) / _this.canvas.width;
+                star.yp = (star.y * 100) / _this.canvas.height;
+                star.rp = (star.r * 100) / _this.canvas.width;
+            });
+
+            _this.ship.vxp = (_this.ship.vx * 100) / _this.canvas.width;
+            _this.ship.vyp = (_this.ship.vy * 100) / _this.canvas.height;
+
+            _this.screen = {
+                w: window.innerWidth,
+                h: window.innerHeight
+            };
+
+            _this.coordinateController();
+            // _this.canvas.width = window.innerWidth *  _this.proportion;
+            // _this.canvas.height = window.innerHeight * _this.proportion * _this.aspectRatio;
+            // _this.stars.map(function (star) {
+            //     star.x*= _this.proportion;
+            //     star.y*= _this.proportion;
+            // })
+        })
+    }
+
+    this.coordinateController = function () {
+        _this.stars.map(function (star) {
+            star.x = _this.canvas.width * star.xp;
+            star.y = _this.canvas.height * star.yp;
+
+            star.r = _this.canvas.width * star.rp;
+        });
+
+        _this.ship.x = _this.canvas.width * ship.xp;
+        _this.ship.y = _this.canvas.height * ship.yp;
+
+        _this.ship.vx = _this.canvas.width * ship.vxp;
+        _this.ship.vy = _this.canvas.height * ship.vyp;
+
+
+    }
+
+    this.screen = {
+        w: 400,
+        h: 350
+    }
+    this.canvas = document.getElementById(canvasId);
+    this.canvas.width = this.screen.w;
+    this.canvas.height = this.screen.h;
+    this.context = this.canvas.getContext('2d');
+    this.timeStep = 10;
+    this.canvasSizeP = 0.5;
+    this.ratio = 360 / 480;
     this.init();
 };
 
