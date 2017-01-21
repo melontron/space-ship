@@ -1,53 +1,6 @@
 /**
  * Created by melontron on 1/20/17.
  */
-
-
-var stars = [
-    {
-        M: 50,
-        x:200,
-        y:700,
-        L: 0,
-        r: 35*2,
-        image: "./images/sun.png"
-    },
-     {
-         M: 50,
-         x: 540,
-         y:100,
-         L: 0,
-         r: 19*2,
-         image: "./images/sun.png"
-     },
-     {
-         M: 50,
-         x: 1040,
-         y:300,
-         L: 0,
-         r: 50*2,
-         image: "./images/sun.png"
-     },
-    {
-        M: 50,
-        x: 1040,
-        y:600,
-        L: 0,
-        r: 50*2,
-        image: "./images/sun.png"
-    },
-];
-
-var ship = {
-    x: 200,
-    y: 600,
-    vx:  100,
-    vy: 0,
-    image: "",
-    r: 20
-
-}
-
 var Controller = function (canvasId, stars, ship) {
     var _this = this;
     this.init = function () {
@@ -200,7 +153,6 @@ var detectCollision = function (ship, stars, boundingRect) {
         (ship.y - ship.r) < boundingRect.y1){
         collided = true;
     }
-    return collided
+    return collided;
 }
-
 

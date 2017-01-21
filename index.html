@@ -6,7 +6,7 @@
     <style>
         body{
             width: 100%;
-            heigt: 100%;
+            height: 100%;
         }
     </style>
 </head>
@@ -14,10 +14,11 @@
 <script src="./utils.js"></script>
 <script src="./engine.js"></script>
 <script src="./canvas.js"></script>
+<script src="./levels.js"></script>
 <canvas id="world"></canvas>
 </body>
 <script>
 
-    var controller = new Controller( "world" ,stars, ship);
+    var controller = new Controller( "world", level1.stars, level1.ship );
 </script>
 </html>
