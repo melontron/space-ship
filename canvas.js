@@ -12,22 +12,22 @@ var stars = [
         r: 17,
         image: "./images/sun.png"
     },
-     // {
-     //     M: 200,
-     //     x: 250,
-     //     y:50,
-     //     L: 0,
-     //     r: 19,
-     //     image: "./images/sun.png"
-     // },
-     // {
-     //     M: 200,
-     //     x: 400,
-     //     y:200,
-     //     L: 0,
-     //     r: 25,
-     //     image: "./images/sun.png"
-     // }
+     {
+         M: 200,
+         x: 250,
+         y:50,
+         L: 0,
+         r: 19,
+         image: "./images/sun.png"
+     },
+     {
+         M: 200,
+         x: 400,
+         y:200,
+         L: 0,
+         r: 25,
+         image: "./images/sun.png"
+     }
 
 ];
 
@@ -82,7 +82,7 @@ var Controller = function (canvasId, stars, ship) {
 
         this.context.beginPath();
         this.context.fillStyle = "00FF00";
-        this.context.fillRect(_this.ship.x -10,_this.ship.y-10 , 20, 20);
+        this.context.fillRect(shipX, shipY, 20, 20);
 
         this.stars.map(function (star) {
             var starX = ( _this.canvas.width * (star.x - star.r) ) / _this.canvasWidth;
@@ -158,8 +158,8 @@ var Controller = function (canvasId, stars, ship) {
     this.canvas = document.getElementById(canvasId);
     this.context = this.canvas.getContext('2d');
     this.timeStep = 50;
-    this.canvasWidth = 400;
-    this.canvasHeight = 300;
+    this.canvasWidth = 1200;
+    this.canvasHeight = 900;
     this.canvasSizeP = 0.5;
     this.ratio = 0.75;
     this.init();
