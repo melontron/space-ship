@@ -3,7 +3,7 @@
  */
 var Controller = function (canvasId, stars, ship) {
     var _this = this;
-    this.init = function () {
+    this.init = function (ship, stars) {
         _this.stars = [];
         stars.map(function (star) {
             var sImage = new Image();
@@ -81,7 +81,7 @@ var Controller = function (canvasId, stars, ship) {
     this.update = function () {
         this.interval = setInterval(function () {
             doAction(_this.changing, _this.evt, _this.clicked);
-            var coords = god(_this.ship, _this.stars);
+            var coords = god(_this.ship, _this.stars, 3);
             _this.updateState(coords);
             _this.render();
 
@@ -91,8 +91,18 @@ var Controller = function (canvasId, stars, ship) {
                 x2: _this.canvasWidth,
                 y2: _this.canvasHeight
             }
+
             if( detectCollision(_this.ship, _this.stars, boundingRect)) {
+                //debugger;
                 clearInterval(_this.interval);
+                //debugger;
+                var lvl = getLevel(_this.level);
+                //debugger;
+                controllers.pop();
+                controllers.push( new Controller( canvasId, lvl.stars, lvl.ship ) )
+                //_this.init(lvl.ship, lvl.stars);
+                //debugger;
+
             }
 
         }, this.timeStep)
@@ -127,10 +137,11 @@ var Controller = function (canvasId, stars, ship) {
     this.timeStep = 10;
     this.clicked = false;
     this.evt = 0;
+    this.level = 1;
     this.changing = null;
-    this.canvasWidth = 1800;
+    this.canvasWidth = 1600;
     this.canvasHeight = 900;
     this.canvasSizeP = 0.8;
-    this.ratio = 0.5;
-    this.init();
+    this.ratio = 0.5625;
+    this.init(ship, stars);
 };

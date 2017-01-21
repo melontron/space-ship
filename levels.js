@@ -34,3 +34,10 @@ var level1 = {
         r: 20
     }
 }
+
+function getLevel(num){
+    var lvl = JSON.stringify(window["level"+num]);
+    console.log(typeof lvl)
+    var lvlP = JSON.parse(lvl);
+    return lvlP;
+}

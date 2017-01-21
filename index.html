@@ -22,7 +22,8 @@
 <canvas id="world"></canvas>
 </body>
 <script>
-
-    var controller = new Controller( "world", level1.stars, level1.ship );
+    var lvl1 = getLevel(1);
+    var controllers = []; 
+    	controllers.push(Controller( "world", lvl1.stars, lvl1.ship ));
 </script>
 </html>
