@@ -22,12 +22,7 @@ var Controller = function (canvasId, stars, ship) {
 
         _this.ship = ship;
         _this.bindEvents();
-        _this.canvas.addEventListener("mousedown", _this.clickHandler);
-        _this.canvas.addEventListener("contextmenu", function (e) {
-            e.preventDefault();
-        });
 
-        // _this.canvas.addEventListener("click", _this.clickHandler);
         _this.canvas.addEventListener("mousedown", _this.mousedown);
         _this.canvas.addEventListener("mouseup", _this.mouseup);
         _this.canvas.addEventListener("contextmenu", function(e){e.preventDefault()});
@@ -83,6 +78,7 @@ var Controller = function (canvasId, stars, ship) {
         _this.ship.vx = coords.ship.vx;
         _this.ship.vy = coords.ship.vy;
     };
+
     this.update = function () {
         this.interval = setInterval(function () {
             doAction(_this.changing, _this.evt, _this.clicked);
@@ -112,6 +108,10 @@ var Controller = function (canvasId, stars, ship) {
         _this.changing = star;
     };
 
+    this.mouseup = function (event) {
+        _this.clicked = false;
+    }
+
     this.bindEvents = function () {
         window.addEventListener("resize",function (event) {
             _this.screen = {
@@ -122,7 +122,6 @@ var Controller = function (canvasId, stars, ship) {
             _this.canvas.height = _this.canvas.width * _this.ratio;
         })
     }
-    //run
 
     this.canvas = document.getElementById(canvasId);
     this.context = this.canvas.getContext('2d');
