@@ -5,35 +5,35 @@
 
 var stars = [
     {
-        M: 6.25*4,
-        x:60,
+        M: 50,
+        x:100,
         y:700,
         L: 0,
-        r: 35,
+        r: 35*2,
         image: "./images/sun.png"
     },
      {
-         M: 8*4,
-         x: 500,
+         M: 50,
+         x: 540,
          y:100,
          L: 0,
-         r: 19,
+         r: 19*2,
          image: "./images/sun.png"
      },
      {
-         M: 6.25*4,
-         x: 1000,
-         y:200,
+         M: 50,
+         x: 1040,
+         y:300,
          L: 0,
-         r: 50,
+         r: 50*2,
          image: "./images/sun.png"
      }
 
 ];
 
 var ship = {
-    x: 60,
-    y: 650,
+    x: 100,
+    y: 600,
     vx:  100,
     vy: 0,
     image: ""

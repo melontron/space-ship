@@ -22,10 +22,10 @@ function doAction(star, event, active){
 	if (active){
 		switch(event){
 			case 0:
-				star.L += 0.2;
+				star.L += 2;
 				break;
 			case 2:
-				star.M += 0.2;
+				star.M += 2;
 				break;
 			default:
 		}
