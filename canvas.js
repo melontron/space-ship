@@ -65,6 +65,10 @@ var Controller = function (canvasId, stars, ship) {
             e.preventDefault();
         });
 
+        // _this.canvas.addEventListener("click", _this.clickHandler);
+        _this.canvas.addEventListener("mousedown", _this.mousedown);
+        _this.canvas.addEventListener("mouseup", _this.mouseup);
+        _this.canvas.addEventListener("contextmenu", function(e){e.preventDefault()});
         _this.render();
         _this.update();
     };
@@ -99,8 +103,6 @@ var Controller = function (canvasId, stars, ship) {
         });
 
 
-
-
     };
 
     this.clear = function () {
@@ -113,59 +115,25 @@ var Controller = function (canvasId, stars, ship) {
         _this.ship.vx = coords.ship.vx;
         _this.ship.vy = coords.ship.vy;
     };
-
     this.update = function () {
         this.interval = setInterval(function () {
+            doAction(_this.changing, _this.evt, _this.clicked);
             var coords = _this.requestState(_this.ship, _this.stars);
             _this.updateState(coords);
             _this.render();
         }, this.timeStep)
     };
 
-
-    this.clickHandler = function (event) {
-
-        var cx = (event.clientX - _this.canvas.getBoundingClientRect().left) * _this.canvasWidth / _this.canvas.width;
-        var cy = (event.clientY- _this.canvas.getBoundingClientRect().top) * _this.canvasHeight / _this.canvas.height;
-        var star = _this.findClickedStar(cx, cy);
-        star.L += 12;
+    this.mousedown = function (event) {
+        var cx = event.clientX - _this.canvas.getBoundingClientRect().left;
+        var cy = event.clientY - _this.canvas.getBoundingClientRect().top;
+        var star = findNearestStar({x: cx, y: cy}, _this.stars);
+        _this.clicked = true;
+        _this.evt = event.button;
+        _this.changing = star;
     };
     //run
-
-    this.getDist = function (x1,y1,x2,y2) {
-        return Math.sqrt( Math.pow(x1 - x2, 2) + Math.pow(y1 - y2 , 2) );
-    };
-
-    this.findClickedStar = function (x,y) {
-        var res = -1;
-        _this.stars.map(function (star) {
-            var dist = _this.getDist(x,y,star.x, star.y);
-            if( dist <= star.r ){
-                res = star;
-            }
-        });
-
-        return res;
-    };
-
-    this.bindEvets = function () {
-        window.addEventListener("resize",function (event) {
-            _this.screen = {
-                w: window.innerWidth,
-                h: window.innerHeight
-            };
-            _this.canvas.width = _this.screen.w * _this.canvasSizeP;
-            _this.canvas.height = _this.canvas.width * _this.ratio;
-        })
-    }
-
-    this.canvas = document.getElementById(canvasId);
-    this.context = this.canvas.getContext('2d');
-    this.timeStep = 10;
-    this.canvasWidth = 1200;
-    this.canvasHeight = 900;
-    this.canvasSizeP = 0.5;
-    this.ratio = 0.75;
+    
     this.init();
 };
 

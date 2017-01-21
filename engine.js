@@ -2,17 +2,9 @@ var alpha =  -20000;
 var beta = 20000;
 var t = 0.01;
 
-function dist(a, b){
-    return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
-}
-
 function god(spaceship, stars, affect){
     affect = affect || 1;
-	var affecting = stars
-	.sort(function(s1, s2){
-	    return dist(spaceship, s1) > dist(spaceship, s2);
-	})
-	.slice(0, affect);
+	var affecting = findNearestStars(spaceship, stars, affect);
 
 	var fx = 0;
 	var fy = 0;
