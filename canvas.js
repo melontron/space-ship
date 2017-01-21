@@ -6,50 +6,19 @@
 var stars = [
     {
         M: 1000000000,
-        xp: 15 * 0.01, /* part of width */
-        yp: 15 * 0.01, /* part of height */
-        x : 0,
-        y: 0,
+        x : 100,
+        y: 100,
         L: 0,
-        r: 0,
-        rp: 2 * 0.01, /* part of width */
+        r: 10,
         image: "./images/sun.png"
-    },
-    // {
-    //     M: 100,
-    //     x: 200,
-    //     y:40,
-    //     L: 100,
-    //     r: 19,
-    //     image: "./images/sun.png"
-    // },
-    // {
-    //     M: 100,
-    //     x: 150,
-    //     y:160,
-    //     L: 100,
-    //     r: 30,
-    //     image: "./images/sun.png"
-    // },
-    // {
-    //     mass: 100,
-    //     x: 400,
-    //     y:270,
-    //     L: 100,
-    //     r: 30,
-    //     image: "./images/sun.png"
-    // }
+    }
 ];
 
 var ship = {
-    xp: 50 * 0.01,
-    yp: 50 * 0.01,
-    x:0,
-    y: 0,
-    vxp: 25 * 0.01,
-    vyp: 0,
-    vx: 0,
-    vy: 0,
+    x:100,
+    y: 150,
+    vx: -400,
+    vy: -105,
     image: ""
 }
 
@@ -73,7 +42,6 @@ var Controller = function (canvasId, stars, ship) {
         _this.canvas.height = _this.canvas.width * _this.ratio;
 
         _this.ship = ship;
-        _this.coordinateController();
         _this.bindEvets();
         _this.canvas.addEventListener("click", _this.clickHandler);
         _this.render();
@@ -92,15 +60,24 @@ var Controller = function (canvasId, stars, ship) {
         this.context.rect(0,0,this.canvas.width, this.canvas.height);
         this.context.stroke();
 
+        var shipX = ( _this.canvas.width * ship.x ) / _this.canvasWidth;
+        var shipY = ( _this.canvas.height * ship.y ) / _this.canvasHeight;
+
         this.context.beginPath();
         this.context.fillStyle = "00FF00";
-        this.context.fillRect(_this.ship.x ,_this.ship.y , 20, 20);
+        this.context.fillRect(shipX ,shipY , 10, 10);
 
         this.stars.map(function (star) {
+            var starX = ( _this.canvas.width * (star.x - star.r) ) / _this.canvasWidth;
+            var starY = ( _this.canvas.height * (star.y - star.r) ) / _this.canvasHeight;
+            var starR = ( _this.canvas.width * star.r ) / _this.canvasWidth;
+            console.log(starX,starY,starR);
             _this.context.beginPath();
-            _this.context.drawImage(star.image, (star.x - star.r), (star.y - star.r), 2 * star.r, 2*star.r);
+            _this.context.drawImage(star.image, starX, starY, 2 * starR, 2*starR);
             _this.context.stroke();
         });
+
+
 
 
     };
@@ -115,15 +92,10 @@ var Controller = function (canvasId, stars, ship) {
         _this.ship.vx = coords.ship.vx;
         _this.ship.vy = coords.ship.vy;
     };
+
     this.update = function () {
         this.interval = setInterval(function () {
             var coords = _this.requestState(_this.ship, _this.stars);
-            // var coords = {};
-            // coords.ship = {
-            //     x: _this.ship.x + Math.random()*10,
-            //     y: _this.ship.y + Math.random()*30 - Math.random()*20
-            // };
-
             _this.updateState(coords);
             _this.render();
         }, this.timeStep)
@@ -156,63 +128,22 @@ var Controller = function (canvasId, stars, ship) {
 
     this.bindEvets = function () {
         window.addEventListener("resize",function (event) {
-            //var coef = window.innerWidth / _this.screen.w;
-
-            _this.canvas.width = window.innerWidth * _this.canvasSizeP;
-            _this.canvas.height = _this.canvas.width * _this.ratio;
-
-            _this.stars.map(function (star) {
-                star.xp = (star.x * 100) / _this.canvas.width;
-                star.yp = (star.y * 100) / _this.canvas.height;
-                star.rp = (star.r * 100) / _this.canvas.width;
-            });
-
-            _this.ship.vxp = (_this.ship.vx * 100) / _this.canvas.width;
-            _this.ship.vyp = (_this.ship.vy * 100) / _this.canvas.height;
-
             _this.screen = {
                 w: window.innerWidth,
                 h: window.innerHeight
             };
-
-            _this.coordinateController();
-            // _this.canvas.width = window.innerWidth *  _this.proportion;
-            // _this.canvas.height = window.innerHeight * _this.proportion * _this.aspectRatio;
-            // _this.stars.map(function (star) {
-            //     star.x*= _this.proportion;
-            //     star.y*= _this.proportion;
-            // })
+            _this.canvas.width = _this.screen.w * _this.canvasSizeP;
+            _this.canvas.height = _this.canvas.width * _this.ratio;
         })
     }
 
-    this.coordinateController = function () {
-        _this.stars.map(function (star) {
-            star.x = _this.canvas.width * star.xp;
-            star.y = _this.canvas.height * star.yp;
-
-            star.r = _this.canvas.width * star.rp;
-        });
-
-        _this.ship.x = _this.canvas.width * ship.xp;
-        _this.ship.y = _this.canvas.height * ship.yp;
-
-        _this.ship.vx = _this.canvas.width * ship.vxp;
-        _this.ship.vy = _this.canvas.height * ship.vyp;
-
-
-    }
-
-    this.screen = {
-        w: 400,
-        h: 350
-    }
     this.canvas = document.getElementById(canvasId);
-    this.canvas.width = this.screen.w;
-    this.canvas.height = this.screen.h;
     this.context = this.canvas.getContext('2d');
-    this.timeStep = 10;
+    this.timeStep = 50;
+    this.canvasWidth = 400;
+    this.canvasHeight = 300;
     this.canvasSizeP = 0.5;
-    this.ratio = 360 / 480;
+    this.ratio = 0.75;
     this.init();
 };
 
