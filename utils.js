@@ -19,10 +19,7 @@ function findNearestStar(spaceship, stars){
 }
 
 function getClickedStar(spaceship, stars){
-	console.log (spaceship);
 	var nStar = findNearestStar(spaceship, stars);
-	console.log (stars)
-	console.log (nStar)
 	return Math.sqrt(dist(spaceship, nStar)) <= nStar.r ? nStar: -1;
 }
 
