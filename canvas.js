@@ -5,27 +5,27 @@
 
 var stars = [
     {
-        M: 45,
+        M: 6.25*4,
         x:60,
-        y:270,
+        y:700,
         L: 0,
-        r: 17,
+        r: 35,
         image: "./images/sun.png"
     },
      {
-         M: 200,
-         x: 250,
-         y:50,
+         M: 8*4,
+         x: 500,
+         y:100,
          L: 0,
          r: 19,
          image: "./images/sun.png"
      },
      {
-         M: 200,
-         x: 400,
+         M: 6.25*4,
+         x: 1000,
          y:200,
          L: 0,
-         r: 25,
+         r: 50,
          image: "./images/sun.png"
      }
 
@@ -33,8 +33,8 @@ var stars = [
 
 var ship = {
     x: 60,
-    y: 230,
-    vx:  150,
+    y: 650,
+    vx:  100,
     vy: 0,
     image: ""
 }
@@ -42,8 +42,8 @@ var ship = {
 var Controller = function (canvasId, stars, ship) {
     var _this = this;
     this.screen = {
-        w: 480,
-        h: 320
+        w: 1200,
+        h: 900
     };
     this.canvas = document.getElementById(canvasId);
     this.canvas.width = this.screen.w;
