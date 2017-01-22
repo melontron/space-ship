@@ -26,10 +26,15 @@ var Controller = function (canvasId, level) {
             img.src = _this.playButton.image;
         _this.playButton.image = img;
         _this.playButton.show = false;
+
+        var img2 = new Image();
+            img2.src = _this.nextButton.image;
+        _this.nextButton.image = img2;
+        _this.nextButton.show = false;
+
         _this.bindEvents();
 
         _this.canvas.addEventListener("mousedown", _this.mousedown);
-        //_this.canvas.addEventListener("click", _this.click);
         _this.canvas.addEventListener("mouseup", _this.mouseup);
         _this.canvas.addEventListener("contextmenu", function(e){e.preventDefault()});
         _this.render();
@@ -74,18 +79,22 @@ var Controller = function (canvasId, level) {
         this.context.stroke();
 
         var endPortalX = ( _this.canvas.width * _this.end_portal.x ) / _this.canvasWidth;
-        var endPortalY = ( _this.canvas.width * _this.end_portal.y ) / _this.canvasWidth;
+        var endPortalY = ( _this.canvas.height * _this.end_portal.y ) / _this.canvasHeight;
+        var endPortalW = ( _this.canvas.width * _this.end_portal.w ) / _this.canvasWidth;
+        var endPortalH = ( _this.canvas.height * _this.end_portal.h ) / _this.canvasHeight;
 
         this.context.beginPath();
         this.canvas.fillStyle = "#FF0000";
         var end_portal_image = new Image();
             end_portal_image.src = _this.end_portal.image;
 
-        this.context.drawImage(end_portal_image, endPortalX - 100 , endPortalY - 100 , 100, 200);
+        this.context.drawImage(end_portal_image, endPortalX, endPortalY, endPortalW, endPortalH);
         this.context.stroke();
 
-        if( _this.playerStatus !== "alive" ){
+        if( _this.playerStatus == "lost" ){
             this.renderPlayButton();
+        } else if (_this.playerStatus == "won") {
+            this.renderNextButton();
         }
     };
 
@@ -102,7 +111,7 @@ var Controller = function (canvasId, level) {
 
     this.update = function () {
         this.interval = setInterval(function () {
-            doAction(_this.changing, _this.evt, _this.clicked);
+            performAction(_this.changing, _this.evt, _this.clicked);
             var coords = superGod(_this.ship, _this.stars);
             _this.updateState(coords);
             _this.render();
@@ -118,9 +127,16 @@ var Controller = function (canvasId, level) {
                 clearInterval(_this.interval);
 
                 _this.playButton.show = true;
-                _this.playerStatus = "died";
+                _this.playerStatus = "lost";
                 _this.render();
+            }
 
+            if (passLevel(_this.ship, _this.end_portal)){
+                clearInterval(_this.interval);
+
+                _this.nextButton.show = true;
+                _this.playerStatus = "won";
+                _this.render();
             }
 
         }, this.timeStep)
@@ -136,7 +152,7 @@ var Controller = function (canvasId, level) {
         _this.changing = star;
 
         _this.btnClick(event, _this.playButton);
-
+        _this.btnClick(event, _this.nextButton);
     };
     
     this.btnClick = function (event, btn) {
@@ -146,7 +162,7 @@ var Controller = function (canvasId, level) {
         var cy = (event.clientY - _this.canvas.getBoundingClientRect().top) ;
 
         //check play button click
-        if( _this.playButton.show ){
+        if( btn.show ){
             if( btn.x1 < cx &&
                 btn.x2 > cx &&
                 btn.y1 < cy &&
@@ -190,36 +206,37 @@ var Controller = function (canvasId, level) {
         })
     }
 
-
     this.renderPlayButton = function () {
-        var btnX =  0.5 * _this.canvas.width;
-        var btnY = 0.5 * _this.canvas.height;
-        console.log("renderPlayButton", _this.playButton)
-        if( _this.playButton.show ){
-            
-            _this.context.beginPath();
-            // console.log(canvasId);
-            // stackBlurCanvasRGBA(canvasId, 0, 0, _this.canvas.width, _this.canvas.height, 35);
-            _this.context.closePath();
-            _this.context.fill();
-            var sx = (btnX - 0.5*_this.playButton.w  * _this.canvas.width / _this.canvasWidth  );
-            var sy = (btnY - 0.5*_this.playButton.h *  _this.canvas.height / _this.canvasHeight);
-
-            var fx = _this.playButton.w * _this.canvas.width / _this.canvasWidth;
-            var fy = _this.playButton.h * _this.canvas.height / _this.canvasHeight;
-
-            _this.playButton.x1 = sx;
-            _this.playButton.y1 = sy;
-            _this.playButton.x2 = fx + sx;
-            _this.playButton.y2 = fy + sy;
-
-            _this.context.beginPath();
-            _this.context.drawImage(_this.playButton.image, sx, sy, fx, fy);
-            _this.context.closePath();
-            _this.context.stroke();
+        if(_this.playButton.show){
+            _this.renderButton(_this.playButton);           
         }
     };
-    //run
+
+    this.renderNextButton = function () {
+        if (_this.nextButton.show){
+            _this.renderButton(_this.nextButton);
+        }
+    }
+
+    this.renderButton = function (button) {
+        var btnX =  0.5 * _this.canvas.width;
+        var btnY = 0.5 * _this.canvas.height;
+        var sx = (btnX - 0.5*button.w  * _this.canvas.width / _this.canvasWidth  );
+        var sy = (btnY - 0.5*button.h *  _this.canvas.height / _this.canvasHeight);
+
+        var fx = button.w * _this.canvas.width / _this.canvasWidth;
+        var fy = button.h * _this.canvas.height / _this.canvasHeight;
+
+        button.x1 = sx;
+        button.y1 = sy;
+        button.x2 = fx + sx;
+        button.y2 = fy + sy;
+
+        _this.context.beginPath();
+        _this.context.drawImage(button.image, sx, sy, fx, fy);
+        _this.context.closePath();
+        _this.context.stroke();
+    };
 
     this.canvas = document.getElementById(canvasId);
     this.context = this.canvas.getContext('2d');
@@ -240,6 +257,13 @@ var Controller = function (canvasId, level) {
         w: 245.2,
         h: 100,
         type: "play"
+    }
+    this.nextButton = {
+        image : "./images/playbutton.png",
+        show: false,
+        w: 245.2,
+        h: 100,
+        type: "next"
     }
     this.init(level);
 };

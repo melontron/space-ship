@@ -23,7 +23,7 @@ function getClickedStar(spaceship, stars){
 	return Math.sqrt(dist(spaceship, nStar)) <= nStar.r ? nStar: -1;
 }
 
-function doAction(star, event, active){
+function performAction(star, event, active){
 	if (active){
 		switch(event){
 			case 0:
@@ -53,4 +53,16 @@ function detectCollision(ship, stars, boundingRect) {
         (ship.x - ship.r) < boundingRect.x1 ||
         (ship.y + ship.r) >  boundingRect.y2 ||
         (ship.y - ship.r) < boundingRect.y1);
+}
+
+function passLevel(ship, portal){
+	var rect = {
+		x1 : portal.x + 0.25 * portal.w,// - ship.r,
+		y1 : portal.y + 0.25 * portal.h,// - ship.r,
+		x2 : portal.x + 0.75 * portal.w,// + ship.r,
+		y2 : portal.y + 0.75 * portal.h,// + ship.r
+	};
+
+	return rect.x1 <= ship.x + ship.r && rect.y1 <= ship.y + ship.r
+			&& rect.x2 >= ship.x - ship.r && rect.y2 >= ship.y - ship.r;	
 }
