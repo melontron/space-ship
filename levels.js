@@ -32,12 +32,12 @@ var level1 = {
         vy: 0,
         image: "",
         r: 20
-    }
+    },
+    num: 1
 }
 
 function getLevel(num){
     var lvl = JSON.stringify(window["level"+num]);
-    console.log(typeof lvl)
     var lvlP = JSON.parse(lvl);
     return lvlP;
 }

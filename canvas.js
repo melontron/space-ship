@@ -1,9 +1,13 @@
 /**
  * Created by melontron on 1/20/17.
  */
-var Controller = function (canvasId, stars, ship) {
+var Controller = function (canvasId, level) {
     var _this = this;
-    this.init = function (ship, stars) {
+    this.init = function (level) {
+
+        var ship = level.ship;
+        var stars = level.stars;
+
         _this.stars = [];
         stars.map(function (star) {
             var sImage = new Image();
@@ -21,9 +25,11 @@ var Controller = function (canvasId, stars, ship) {
         _this.canvas.height = _this.canvas.width * _this.ratio;
 
         _this.ship = ship;
+        _this.playButton.show = false;
         _this.bindEvents();
 
         _this.canvas.addEventListener("mousedown", _this.mousedown);
+        //_this.canvas.addEventListener("click", _this.click);
         _this.canvas.addEventListener("mouseup", _this.mouseup);
         _this.canvas.addEventListener("contextmenu", function(e){e.preventDefault()});
         _this.render();
@@ -38,6 +44,8 @@ var Controller = function (canvasId, stars, ship) {
 
         var bg = new Image();
             bg.src = "./images/spaceship_background.png";
+
+        //debugger;
         this.context.drawImage(bg,0,0,this.canvas.width, this.canvas.height);
         this.context.stroke();
 
@@ -65,6 +73,9 @@ var Controller = function (canvasId, stars, ship) {
         this.context.closePath();
         this.context.fill();
 
+        if( _this.playerStatus !== "alive" ){
+            this.renderPlayButton();
+        }
     };
 
     this.clear = function () {
@@ -77,7 +88,6 @@ var Controller = function (canvasId, stars, ship) {
         _this.ship.vx = coords.ship.vx;
         _this.ship.vy = coords.ship.vy;
     };
-
     this.update = function () {
         this.interval = setInterval(function () {
             doAction(_this.changing, _this.evt, _this.clicked);
@@ -94,24 +104,73 @@ var Controller = function (canvasId, stars, ship) {
 
             if( detectCollision(_this.ship, _this.stars, boundingRect)) {
                 clearInterval(_this.interval);
-                var lvl = getLevel(_this.level);
-                controllers.pop();
-                controllers.push( new Controller( canvasId, lvl.stars, lvl.ship ) )
+
+                _this.playButton.show = true;
+                _this.playerStatus = "died";
+                _this.render();
+
             }
 
         }, this.timeStep)
     };
 
     this.mousedown = function (event) {
+        if( _this.deleted ) return;
         var cx = (event.clientX - _this.canvas.getBoundingClientRect().left) * _this.canvasWidth / _this.canvas.width;
         var cy = (event.clientY - _this.canvas.getBoundingClientRect().top) * _this.canvasHeight / _this.canvas.height;
         var star = getClickedStar({x: cx, y: cy}, _this.stars);
         _this.clicked = true;
         _this.evt = event.button;
         _this.changing = star;
+
+
+
+
+
+
+        var res = false;
+        var cx = (event.clientX - _this.canvas.getBoundingClientRect().left) ;
+        var cy = (event.clientY - _this.canvas.getBoundingClientRect().top) ;
+
+        //check play button click
+       _this.btnClick(event, _this.playButton);
+
     };
+    
+    this.btnClick = function (event, btn) {
+        if (_this.deleted) return;
+        var res = false;
+        var cx = (event.clientX - _this.canvas.getBoundingClientRect().left) ;
+        var cy = (event.clientY - _this.canvas.getBoundingClientRect().top) ;
+
+        //check play button click
+        if( _this.playButton.show ){
+            if( btn.x1 < cx &&
+                btn.x2 > cx &&
+                btn.y1 < cy &&
+                btn.y2 > cy){
+
+                var lvl;
+                if(btn.type == "play"){
+                    lvl = getLevel(_this.level.num);
+                }
+                else if( btn.type == "next" ){
+                    lvl = getLevel(_this.level.num + 1);
+                }
+
+                _this.deleted = true;
+                delete _this.canvas;
+                delete controllers.pop();
+
+                controllers.push( Controller( canvasId, lvl ) )
+            }
+        }
+
+
+    }
 
     this.mouseup = function (event){
+        if(_this.deleted) return;
         _this.clicked = false;
     };
 
@@ -123,19 +182,60 @@ var Controller = function (canvasId, stars, ship) {
             };
             _this.canvas.width = _this.screen.w * _this.canvasSizeP;
             _this.canvas.height = _this.canvas.width * _this.ratio;
+            if( _this.playerStatus !== "alive" ){
+                _this.render();
+            }
         })
     }
+
+
+    _this.renderPlayButton = function () {
+        var btnX =  0.5 * _this.canvas.width;
+        var btnY = 0.5 * _this.canvas.height;
+        if( _this.playButton.show ){
+            if( typeof _this.playButton.image == "string" ){
+                var img = new Image();
+                    img.src = _this.playButton.image;
+                    _this.playButton.image = img;
+            }
+            _this.context.beginPath();
+            stackBlurCanvasRGBA(canvasId, 0, 0, _this.canvas.width, _this.canvas.height, 35);
+            var sx = (btnX - 0.5*_this.playButton.w  * _this.canvas.width / _this.canvasWidth  );
+            var sy = (btnY - 0.5*_this.playButton.h *  _this.canvas.height / _this.canvasHeight);
+
+            var fx = _this.playButton.w * _this.canvas.width / _this.canvasWidth;
+            var fy = _this.playButton.h * _this.canvas.height / _this.canvasHeight;
+
+            _this.playButton.x1 = sx;
+            _this.playButton.y1 = sy;
+            _this.playButton.x2 = fx + sx;
+            _this.playButton.y2 = fy + sy;
+
+            _this.context.drawImage(_this.playButton.image, sx, sy, fx, fy);
+            _this.context.stroke();
+        }
+    };
+    //run
 
     this.canvas = document.getElementById(canvasId);
     this.context = this.canvas.getContext('2d');
     this.timeStep = 10;
     this.clicked = false;
     this.evt = 0;
-    this.level = 1;
+    this.level = level;
     this.changing = null;
+    this.deleted = false;
     this.canvasWidth = 1600;
     this.canvasHeight = 900;
     this.canvasSizeP = 0.8;
     this.ratio = 0.5625;
-    this.init(ship, stars);
+    this.playerStatus = "alive";
+    this.playButton = {
+        image : "./images/playbutton.png",
+        show: false,
+        w: 245.2,
+        h: 100,
+        type: "play"
+    }
+    this.init(level);
 };

@@ -9,12 +9,13 @@
             height: 100%;
         }
         #world{
-            min-width: 768px;
+
         }
     </style>
 </head>
 <body>
 <script src="./config.js"></script>
+<script src="./lib/blur.js"></script>
 <script src="./utils.js"></script>
 <script src="./engine.js"></script>
 <script src="./canvas.js"></script>
@@ -24,6 +25,6 @@
 <script>
     var lvl1 = getLevel(1);
     var controllers = []; 
-    	controllers.push(Controller( "world", lvl1.stars, lvl1.ship ));
+    	controllers.push(Controller( "world", lvl1 ));
 </script>
 </html>
