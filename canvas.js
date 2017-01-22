@@ -263,17 +263,17 @@ var Controller = function (canvasId, level) {
     this.ratio = 0.5625;
     this.playerStatus = "alive";
     this.playButton = {
-        image : "./images/playbutton.png",
+        image : "./images/game_over_vozni_1.png",
         show: false,
-        w: 245.2,
-        h: 100,
+         w: 1188,
+         h: 572,
         type: "play"
     }
     this.nextButton = {
-        image : "./images/playbutton.png",
+        image : "./images/you won.png",
         show: false,
-        w: 245.2,
-        h: 100,
+        w: 1188,
+        h: 572,
         type: "next"
     }
     this.init(level);
