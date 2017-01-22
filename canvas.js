@@ -45,7 +45,7 @@ var Controller = function (canvasId, level) {
         _this.clear();
 
         this.context.beginPath();
-        this.context.fillStyle = "#FF0000";
+        this.canvas.fillStyle = "#FF0000";
 
         var bg = new Image();
             bg.src = "./images/background.png";
@@ -60,6 +60,19 @@ var Controller = function (canvasId, level) {
             var starY = ( _this.canvas.height * (star.y - star.r) ) / _this.canvasHeight;
             var starR = ( _this.canvas.width * star.r ) / _this.canvasWidth;
 
+            var starL = star.L;
+            var starM = star.M;
+
+            var gradient = _this.context.createRadialGradient(circleX, circleY, (starL * starM) / 2250, circleX, circleY, (starL * starM) / 900);
+            gradient.addColorStop(0,"rgba(255,255,255,0.5)");
+            gradient.addColorStop(1,"rgba(5,28,41,0.3)");
+            _this.context.beginPath();
+            _this.context.fillStyle = gradient;
+            _this.context.arc(circleX, circleY, (2 + 2 * starL / 300) * starR, 0, 2 * Math.PI);
+            _this.context.fill();
+            _this.context.closePath();
+
+
             _this.context.beginPath();
             _this.context.arc(circleX, circleY, starR, 0, 2 * Math.PI);
             _this.context.drawImage(star.image, starX, starY, 2 * starR, 2*starR);
@@ -72,7 +85,6 @@ var Controller = function (canvasId, level) {
 
 
         this.context.beginPath();
-        this.canvas.fillStyle = "#FF0000";
         var shipImage = new Image();
             shipImage.src = _this.ship.image;
         this.context.drawImage(shipImage, shipX, shipY, 2 * shipR, 2 * shipR);
@@ -84,7 +96,6 @@ var Controller = function (canvasId, level) {
         var endPortalH = ( _this.canvas.height * _this.end_portal.h ) / _this.canvasHeight;
 
         this.context.beginPath();
-        this.canvas.fillStyle = "#FF0000";
         var end_portal_image = new Image();
             end_portal_image.src = _this.end_portal.image;
 
