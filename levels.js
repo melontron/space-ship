@@ -1,43 +1,35 @@
+
 var level1 = {
     stars: [
         {
-            M: 50,
-            x:300,
-            y:600,
-            L: 0,
-            r: 35*2,
-            image: "./images/texture.png",
-            lines: "./images/lines1.png",
-            color: "#FF0000"
+            M: 200,
+            x:250,
+            y:650,
+            L: 50,
+            r: 80,
+            image: "./images/star_1.png"
         },
-         {
-             M: 50,
-             x: 540,
-             y:100,
-             L: 0,
-             r: 19*2,
-             image: "./images/texture.png",
-             lines: "./images/lines1.png",
-             color: "#00FF00"
-         },
-         {
-             M: 50,
-             x: 1040,
-             y:300,
-             L: 0,
-             r: 50*2,
-             image: "./images/texture.png",
-             lines: "./images/lines1.png",
-             color: "#ff4444"
-         }
+        {
+            M: 500,
+            x: 1400,
+            y: 100,
+            L: 200,
+            r: 200,
+            image: "./images/star_2.png"
+        }
     ],
     ship: {
-        x: 100,
-        y: 400,
-        vx:  100,
+        x: 250,
+        y: 500,
+        vx: 100*1.41,
         vy: 0,
         image: "./images/spaceship.png",
-        r: 50
+        r: 40
+    },
+    end_portal: {
+        x: 1500,
+        y: 500,
+        image: "./images/end_portal_vertical_100x200.png"
     },
     num: 1
 }

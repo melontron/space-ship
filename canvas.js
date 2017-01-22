@@ -5,19 +5,13 @@ var Controller = function (canvasId, level) {
     var _this = this;
     this.init = function (level) {
 
-        var ship = level.ship;
-        var stars = level.stars;
-
-        _this.stars = [];
-        stars.map(function (star) {
+        _this.ship = level.ship;
+        _this.end_portal = level.end_portal;
+        _this.stars = level.stars.map(function (star) {
             var sImage = new Image();
                 sImage.src = star.image;
                 star.image = sImage;
-
-            var sImage1 = new Image();
-                sImage1.src = star.lines;
-                star.lines = sImage1;
-                _this.stars.push(star);
+            return star;
         });
 
         _this.screen = {
@@ -28,7 +22,9 @@ var Controller = function (canvasId, level) {
         _this.canvas.width = _this.screen.w * _this.canvasSizeP;
         _this.canvas.height = _this.canvas.width * _this.ratio;
 
-        _this.ship = ship;
+        var img = new Image();
+            img.src = _this.playButton.image;
+        _this.playButton.image = img;
         _this.playButton.show = false;
         _this.bindEvents();
 
@@ -47,14 +43,9 @@ var Controller = function (canvasId, level) {
         this.context.fillStyle = "#FF0000";
 
         var bg = new Image();
-            bg.src = "./images/spaceship_background.png";
-
-        //debugger;
+            bg.src = "./images/background.png";
         this.context.drawImage(bg,0,0,this.canvas.width, this.canvas.height);
         this.context.stroke();
-
-        // var shipX = ( _this.canvas.width * ship.x ) / _this.canvasWidth;
-        // var shipY = ( _this.canvas.height * ship.y ) / _this.canvasHeight;
 
         this.stars.map(function (star) {
             var circleX = ( _this.canvas.width * (star.x ) ) / _this.canvasWidth;
@@ -63,13 +54,10 @@ var Controller = function (canvasId, level) {
             var starX = ( _this.canvas.width * (star.x - star.r) ) / _this.canvasWidth;
             var starY = ( _this.canvas.height * (star.y - star.r) ) / _this.canvasHeight;
             var starR = ( _this.canvas.width * star.r ) / _this.canvasWidth;
-            //console.log(starX,starY,starR);
+
             _this.context.beginPath();
-            _this.context.fillStyle = star.color;
             _this.context.arc(circleX, circleY, starR, 0, 2 * Math.PI);
-            _this.context.fill();
             _this.context.drawImage(star.image, starX, starY, 2 * starR, 2*starR);
-            _this.context.drawImage(star.lines, starX, starY, 2 * starR, 2*starR);
             _this.context.stroke();
         });
 
@@ -83,8 +71,18 @@ var Controller = function (canvasId, level) {
         var shipImage = new Image();
             shipImage.src = _this.ship.image;
         this.context.drawImage(shipImage, shipX, shipY, 2 * shipR, 2 * shipR);
-        this.context.closePath();
-        this.context.fill();
+        this.context.stroke();
+
+        var endPortalX = ( _this.canvas.width * _this.end_portal.x ) / _this.canvasWidth;
+        var endPortalY = ( _this.canvas.width * _this.end_portal.y ) / _this.canvasWidth;
+
+        this.context.beginPath();
+        this.canvas.fillStyle = "#FF0000";
+        var end_portal_image = new Image();
+            end_portal_image.src = _this.end_portal.image;
+
+        this.context.drawImage(end_portal_image, endPortalX - 100 , endPortalY - 100 , 100, 200);
+        this.context.stroke();
 
         if( _this.playerStatus !== "alive" ){
             this.renderPlayButton();
@@ -101,10 +99,11 @@ var Controller = function (canvasId, level) {
         _this.ship.vx = coords.ship.vx;
         _this.ship.vy = coords.ship.vy;
     };
+
     this.update = function () {
         this.interval = setInterval(function () {
             doAction(_this.changing, _this.evt, _this.clicked);
-            var coords = god(_this.ship, _this.stars);
+            var coords = superGod(_this.ship, _this.stars);
             _this.updateState(coords);
             _this.render();
 
@@ -136,17 +135,7 @@ var Controller = function (canvasId, level) {
         _this.evt = event.button;
         _this.changing = star;
 
-
-
-
-
-
-        var res = false;
-        var cx = (event.clientX - _this.canvas.getBoundingClientRect().left) ;
-        var cy = (event.clientY - _this.canvas.getBoundingClientRect().top) ;
-
-        //check play button click
-       _this.btnClick(event, _this.playButton);
+        _this.btnClick(event, _this.playButton);
 
     };
     
@@ -202,17 +191,17 @@ var Controller = function (canvasId, level) {
     }
 
 
-    _this.renderPlayButton = function () {
+    this.renderPlayButton = function () {
         var btnX =  0.5 * _this.canvas.width;
         var btnY = 0.5 * _this.canvas.height;
+        console.log("renderPlayButton", _this.playButton)
         if( _this.playButton.show ){
-            if( typeof _this.playButton.image == "string" ){
-                var img = new Image();
-                    img.src = _this.playButton.image;
-                    _this.playButton.image = img;
-            }
+            
             _this.context.beginPath();
-            stackBlurCanvasRGBA(canvasId, 0, 0, _this.canvas.width, _this.canvas.height, 35);
+            // console.log(canvasId);
+            // stackBlurCanvasRGBA(canvasId, 0, 0, _this.canvas.width, _this.canvas.height, 35);
+            _this.context.closePath();
+            _this.context.fill();
             var sx = (btnX - 0.5*_this.playButton.w  * _this.canvas.width / _this.canvasWidth  );
             var sy = (btnY - 0.5*_this.playButton.h *  _this.canvas.height / _this.canvasHeight);
 
@@ -224,7 +213,9 @@ var Controller = function (canvasId, level) {
             _this.playButton.x2 = fx + sx;
             _this.playButton.y2 = fy + sy;
 
+            _this.context.beginPath();
             _this.context.drawImage(_this.playButton.image, sx, sy, fx, fy);
+            _this.context.closePath();
             _this.context.stroke();
         }
     };
