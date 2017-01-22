@@ -13,6 +13,10 @@ var Controller = function (canvasId, level) {
             var sImage = new Image();
                 sImage.src = star.image;
                 star.image = sImage;
+
+            var sImage1 = new Image();
+                sImage1.src = star.lines;
+                star.lines = sImage1;
                 _this.stars.push(star);
         });
 
@@ -53,23 +57,32 @@ var Controller = function (canvasId, level) {
         // var shipY = ( _this.canvas.height * ship.y ) / _this.canvasHeight;
 
         this.stars.map(function (star) {
+            var circleX = ( _this.canvas.width * (star.x ) ) / _this.canvasWidth;
+            var circleY = ( _this.canvas.height* (star.y ) ) / _this.canvasHeight;
+
             var starX = ( _this.canvas.width * (star.x - star.r) ) / _this.canvasWidth;
             var starY = ( _this.canvas.height * (star.y - star.r) ) / _this.canvasHeight;
             var starR = ( _this.canvas.width * star.r ) / _this.canvasWidth;
             //console.log(starX,starY,starR);
             _this.context.beginPath();
+            _this.context.fillStyle = star.color;
+            _this.context.arc(circleX, circleY, starR, 0, 2 * Math.PI);
+            _this.context.fill();
             _this.context.drawImage(star.image, starX, starY, 2 * starR, 2*starR);
+            _this.context.drawImage(star.lines, starX, starY, 2 * starR, 2*starR);
             _this.context.stroke();
         });
 
-        var shipX = ( _this.canvas.width * (ship.x) ) / _this.canvasWidth;
-        var shipY = ( _this.canvas.height * (ship.y) ) / _this.canvasHeight;
+        var shipX = ( _this.canvas.width * (ship.x - ship.r) ) / _this.canvasWidth;
+        var shipY = ( _this.canvas.height * (ship.y - ship.r) ) / _this.canvasHeight;
         var shipR = ( _this.canvas.width * ship.r ) / _this.canvasWidth;
 
 
         this.context.beginPath();
         this.canvas.fillStyle = "#FF0000";
-        this.context.arc(shipX, shipY, shipR, 0, 2 * Math.PI);
+        var shipImage = new Image();
+            shipImage.src = _this.ship.image;
+        this.context.drawImage(shipImage, shipX, shipY, 2 * shipR, 2 * shipR);
         this.context.closePath();
         this.context.fill();
 
